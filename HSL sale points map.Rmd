@@ -1,0 +1,32 @@
+---
+title: "HSL Sale Points Map"
+author: "Tung Hoang"
+date: "3 August 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## HSL Sale Point Map
+
+With a few line of code, we can create simple leaflet map showing all the Helsinki Regional Transport (HSL) ticket sale points. The data is obtained from the open database provided by Helsinki Region Infoshare website (hri.fi)
+
+Welcome to Helsinki, Finland!
+
+
+```{r warning=FALSE}
+library(leaflet)
+
+url <- 'http://data.hslhrt.opendata.arcgis.com/datasets/42045a8235114dc8bf417df0a1a89edd_0.csv'
+hsl <- read.csv(url, encoding = 'UTF-8')
+hsl <- hsl[!is.na(hsl$LON),] #delete some N/A data point
+
+leaflet(hsl) %>% addTiles() %>% addMarkers(lng = hsl$LON, lat = hsl$LAT, 
+                                           popup = hsl$OSOITE, 
+                                           label = hsl$NIMI,
+                                           clusterOptions = markerClusterOptions())
+
+```
+
